@@ -1,21 +1,28 @@
-import socket
+from socket import *
 
-while True:
-	sock = socket.socket()
-	sock.bind(('', 9090))
-	sock.listen(0)
-	conn, addr = sock.accept()
-	print(addr)
+# данные сервера
+host = 'localhost'
+port = 777
+addr = (host, port)
 
-	msg = ''
+client = [] # Массив где храним адреса клиентов
+print ('Start Server')
 
-	while True:
-		data = conn.recv(1024)
-		if not data:
-			break
-		msg += data.decode()
-		conn.send(data)
+# socket - функция создания сокета
+# первый параметр socket_family может быть AF_INET или AF_UNIX
+# второй параметр socket_type может быть SOCK_STREAM(для TCP) или SOCK_DGRAM(для UDP)
+udp_socket = socket(AF_INET, SOCK_DGRAM)
+# bind - связывает адрес и порт с сокетом
+udp_socket.bind(addr)
 
-	print(msg)
-	if msg == 'exit':
-		conn.close()
+while 1 :
+         data , addres = udp_socket.recvfrom(1024)
+         #print (addres[0], " // ", addres[1])
+         if  addres not in client :
+            client.append(addres)# Если такого клиента нету , то добавить
+            print('client appended')
+         for clients in client :
+                 if clients == addres :
+                     udp_socket.sendto(data, clients)
+                     print(clients[1])
+                     print(bytes.decode(data))
