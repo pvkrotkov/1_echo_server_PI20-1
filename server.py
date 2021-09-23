@@ -1,22 +1,32 @@
-import socket
+from socket import *
 
-sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
+#host = 'empire-org.fun'
+host = 'localhost'
+port = 9090
+addr = (host, port)
+
+udp_socket = socket(AF_INET, SOCK_DGRAM)
+
+udp_socket.bind(addr)
+
+client_list = []
+
 while True:
-	conn, addr = sock.accept()
-	print(addr)
 
-	msg = ''
+    print('wait data...')
 
-	while True:
-		data = conn.recv(1024)
-		if not data:
-			break
-		msg += data.decode()
-		conn.send(data)
+    conn, addr = udp_socket.recvfrom(1024)
+    data = conn.decode()
+    if not (addr in client_list):
+        client_list.append(addr)
 
-	print(msg)
+    if data == 'exit':
+        break
 
-	if msg == "exit":
-		conn.close()
+    for c_addr in client_list:
+        if c_addr != addr:
+            udp_socket.sendto(b'hello', c_addr)
+
+    print(data)
+
+udp_socket.close()

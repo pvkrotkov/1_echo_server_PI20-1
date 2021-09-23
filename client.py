@@ -1,16 +1,34 @@
-import socket
+from socket import *
+from threading import *
+import sys
 
-sock = socket.socket()
-sock.setblocking(True)
-while True:
-    sock.connect(('127.0.0.1', 9090))
+host = 'localhost'
+port = 9090
+addr = (host, port)
 
-    msg = input()
-    sock.send(msg.encode())
+udp_socket = socket(AF_INET, SOCK_DGRAM)
 
-    data = sock.recv(1024)
 
-    if msg == "exit":
-        sock.close()
+def client():
+    while True:
+        client_data = input('write to server: ')
+        if not client_data:
+            udp_socket.close()
+            sys.exit(1)
 
-    print(data.decode())
+        client_data_b = str.encode(client_data)
+        udp_socket.sendto(client_data_b, addr)
+
+
+def server():
+    while True:
+        print(udp_socket.recvfrom(1024))
+
+
+if __name__ == "__main__":
+    client = Thread(target=client)
+    server = Thread(target=server)
+
+    client.start()
+    server.start()
+
