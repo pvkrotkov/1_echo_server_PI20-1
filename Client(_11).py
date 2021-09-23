@@ -12,5 +12,5 @@ sock.sendto((U_Name+' Connect to server').encode('utf-8'), server)
 stream = threading.Thread(target= read_sok)
 stream.start()
 while True:
-    mensahe = input()
-    sock.sendto(('['+U_Name+']'+mensahe).encode('utf-8'), server)
+    message = input()
+    sock.sendto(('['+U_Name+']'+message).encode('utf-8'), server)
