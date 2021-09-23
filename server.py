@@ -1,20 +1,18 @@
 import socket
+from time import sleep
 
 sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
+sock.setblocking(1)
+sock.connect(('127.0.0.1', 9090))
 
-msg = ''
+msg = input()
+while len(msg) != 0:
+    sock.send(msg.encode())
 
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
+    data = sock.recv(1024)
+    if msg == 'exit':
+        sock.close()
+        break
 
-print(msg)
-
-conn.close()
+    print(data.decode())
+    msg = input()
