@@ -1,7 +1,7 @@
 import socket
 sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 sock.bind (('',9091))
-client = [] # Массив где храним адреса клиентов
+client = []
 print ('Server online!')
 while True:
          data , addres = sock.recvfrom(1024)
