@@ -1,17 +1,19 @@
-import socket
-from time import sleep
+from socket import *
+import sys
 
-sock = socket.socket()
-sock.setblocking(1)
-sock.connect(('127.0.0.1', 9090))
+host = 'localhost'
+port = 777
+addr = (host, port)
 
-msg = input()
-while len(msg) != 0:
-    sock.send(msg.encode())
+udp_socket = socket(AF_INET, SOCK_DGRAM)
 
-    data = sock.recv(1024)
-    if msg == 'exit':
-        sock.close()
-        break
-    print(data.decode())
-    msg = input()
+while 1:
+    data = input('write to server: ')
+    data = str.encode(data)
+    udp_socket.sendto(data, addr)
+    data = bytes.decode(data)
+    # print(data)
+    # data = udp_socket.recvfrom(1024)
+
+udp_socket.close()
+
