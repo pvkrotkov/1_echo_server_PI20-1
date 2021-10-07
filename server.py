@@ -1,4 +1,5 @@
 import socket
+import threading
 
 sock = socket.socket()
 sock.bind(('', 9090))
@@ -8,13 +9,16 @@ print(addr)
 
 msg = ''
 
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
+def proc():
+	while True:
+		data = conn.recv(1024)
+		if not data:
+			break
+		msg += data.decode()
+		conn.send(data)
 
 print(msg)
 
+p1 = threading.Thread(target = proc, name = "t1")
+p1.start()
 conn.close()
