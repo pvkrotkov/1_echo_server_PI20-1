@@ -1,21 +1,45 @@
-from socket import *
-import sys
+import socket
+import re
+from threading import *
 
-host = 'localhost'
-port = 777
-addr = (host,port)
-
-udp_socket = socket(AF_INET, SOCK_DGRAM)
-
-#encode - перекодирует введенные данные в байты, decode - обратно
-while 1:
-    data = input('write to server: ')
-    data = str.encode(data)
-    udp_socket.sendto(data, addr)
-    data = bytes.decode(data)
-    #print(data)
-    #data = udp_socket.recvfrom(1024)
+sock = socket.socket()
+sock.setblocking(True)
+isOpen = False
 
 
+def client():
+    global isOpen
+    adr = str(input('Введите адрес сервера = '))
+    if re.search(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", adr): # регулярное выражение которое проверяет верность введенного ip
+        port = int(input('Введите порт сервера = '))
+        if 1024 < port < 65535:
+            sock.connect((adr, port))
+            isOpen = True
+            print("Подключение установленно")
+            while True:
+                msg = input()
+                sock.send(msg.encode())
 
-udp_socket.close()
+                if msg == "exit":
+                    break
+        else:
+            print("Не верный Порт")
+    else:
+        print("Не верный IP")
+
+
+def server():
+    global isOpen
+    while True:
+        if isOpen:
+            data = sock.recv(1024)
+            if data is not None or data != "":
+                print(data.decode())
+
+
+if __name__ == "__main__":
+    client = Thread(target=client)
+    server = Thread(target=server)
+
+    client.start()
+    server.start()
