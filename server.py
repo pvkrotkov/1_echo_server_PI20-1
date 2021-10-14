@@ -24,6 +24,11 @@ def listener(conn_m, addr_m):
 print("Сервер запущен")
 while True:
     conn, addr = sock.accept()
-    clients.append(conn)
-    client = Thread(target=listener, args=(conn, addr))
-    client.run()
+    msg = ''
+    data = conn.recv(1024)
+    msg += data.decode()
+    if msg != 'scanner_command':
+        clients.append(conn)
+        client = Thread(target=listener, args=(conn, addr))
+        client.run()
+    
