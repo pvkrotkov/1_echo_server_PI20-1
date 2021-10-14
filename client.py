@@ -1,6 +1,7 @@
 import socket
 import re
 from threading import *
+import scanner
 
 sock = socket.socket()
 sock.setblocking(True)
@@ -11,19 +12,22 @@ def client():
     global isOpen
     adr = str(input('Введите адрес сервера = '))
     if re.search(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", adr): # регулярное выражение которое проверяет верность введенного ip
-        port = int(input('Введите порт сервера = '))
-        if 1024 < port < 65535:
-            sock.connect((adr, port))
-            isOpen = True
-            print("Подключение установленно")
-            while True:
-                msg = input()
-                sock.send(msg.encode())
+        scanner.mainn(adr, 1000)
+        for i in range(len(scanner.ports)):
+            try:
+                sock.connect((adr, scanner.ports[i]))
+                print('Подключение установлено')
+                break
+            except:
+                pass
+        isOpen = True
+        while True:
+            print('введите сообщение')
+            msg = input()
+            sock.send(msg.encode())
+            if msg == "exit":
+                break
 
-                if msg == "exit":
-                    break
-        else:
-            print("Не верный Порт")
     else:
         print("Не верный IP")
 
