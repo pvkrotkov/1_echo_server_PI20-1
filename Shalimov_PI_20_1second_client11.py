@@ -1,8 +1,8 @@
 import socket
 def vvod (maks, chto, ymol):
         while True:
-                chis = "ymol"
-                #chis = input("vvedite " +chto+ " ili ymol dli znachenia po ymolchaniy "+str(ymol)+ ": ")
+                #chis = "ymol"
+                chis = input("vvedite " +chto+ " ili ymol dli znachenia po ymolchaniy "+str(ymol)+ ": ")
                 if chis.isdigit(): #нуля до 65535
                         chis = int(chis)
                         if chis > -1 and chis < maks+1:
