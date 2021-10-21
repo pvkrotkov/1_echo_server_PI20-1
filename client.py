@@ -13,4 +13,4 @@ while True:
     sock.send(data_out.encode())
   data_in = sock.recv(1024)
   print(data_in.decode())
- sock.close()
+sock.close()
