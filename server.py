@@ -14,6 +14,5 @@ while True:
 		break
 	data_out += data_in.decode()
 	conn.send(data_in)
-
 print(data_out)
 conn.close()
