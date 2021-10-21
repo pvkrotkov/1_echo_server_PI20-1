@@ -2,7 +2,6 @@ import socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
 port = 9090
-
 sock.bind((host, port))
 sock.listen(4)
 conn, address = sock.accept()
