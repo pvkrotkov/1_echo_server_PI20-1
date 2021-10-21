@@ -1,5 +1,4 @@
 import socket
-from time import sleep
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = input('Введите IP-адрес входа:')
 port = 9090
