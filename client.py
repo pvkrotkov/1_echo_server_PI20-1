@@ -3,11 +3,15 @@ from time import sleep
 
 sock = socket.socket()
 sock.setblocking(1)
-sock.connect(('10.38.165.12', 9090))
+sock.connect(('10.0.2.15', 64444))
 
-#msg = input()
-msg = "Hi!"
-sock.send(msg.encode())
+message = ''
+msg = input('Enter text: ')
+while msg!='exit':
+	message+=msg+' '
+	msg = input('Enter text: ')
+
+sock.send(message.encode())
 
 data = sock.recv(1024)
 
