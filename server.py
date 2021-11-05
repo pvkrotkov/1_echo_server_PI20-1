@@ -1,20 +1,33 @@
-import socket
+import socket, time
 
-sock = socket.socket()
-sock.bind(('', 64444))
-sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
+host = "10.0.2.15"
+port = 9090
 
-msg = ''
+clients = []
+s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+s.bind((host,port))
 
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
+quit = False
+print("[ Server Started ]")
 
-print(msg)
+while not quit:
+        try:
+                data, addr = s.recvfrom(1024)
 
-conn.close()
+                if addr not in clients:
+                        clients.append(addr)
+
+                itsatime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+	        print("["+addr[0]+"]=["+str(addr[1])+"]=["+itsatime+"]| ",end=">
+                print(data.decode("utf-8"))
+
+                #проверяем отправителя сообщения, чтобы оно не отправлялось сам>
+                for client in clients:
+                        if addr != client:
+                                s.sendto(data,client)
+        except: 
+                print("\n[ Server Stopped ]")
+                quit = True
+
+s.close()
