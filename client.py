@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
- 
+
 import socket
- 
-HOST = '127.0.0.1'  # The server's hostname or IP address
-PORT = 65432        # The port used by the server
+
+HOST = '127.0.0.1'
+PORT = 65432  
 while True:
     command = input()
     if command != 'exit':
@@ -17,7 +17,7 @@ while True:
             s.connect((HOST, PORT))
             s.sendall(b'exit')
             data = s.recv(1024)
-            print('Received',  data.decode('UTF-8'))
+            print('Received', data.decode('UTF-8'))
             print('Соединение разорвано')
         break
     else:
