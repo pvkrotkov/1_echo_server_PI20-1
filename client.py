@@ -1,16 +1,25 @@
-import socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+from socket import *
+from threading import *
+import sys
+udp_sock = socket(AF_INET, SOCK_STREAM)
 host = input('Введите IP-адрес входа:')
 port = 9090
 address = (host, port)
-sock.connect((host, port))
+udp_sock.connect(address)
 print('Введите exit, чтобы выйти.')
-while True:
-  data_out = input('Введите сообщение:')
-  if data_out == 'exit':
-    break
-  while len(data_out) != 0:
-    sock.send(data_out.encode())
-  data_in = sock.recv(1024)
-  print(data_in.decode())
-sock.close()
+def client():
+  while True:
+    data_out = input('Введите сообщение:')
+    if (data_out == 'exit') || (not data_out):
+      udp_sock.close()
+      sys.exit(1)
+    data_in = str.encode(data_out)
+    udp_sock.sendto(data_in, address)
+def server():
+  while True:
+    print(udp_sock.recv(1024))
+if __name__ == "__main__":
+  client = Thread(target = client)
+  server = Thread(target = server)
+  client.start()
+  server.start()
