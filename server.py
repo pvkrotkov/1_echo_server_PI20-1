@@ -1,20 +1,24 @@
 import socket
 
-sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
+fwq = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-msg = ''
+fwq.bind(('localhost', 9090))
+
+print('Начать чат! ')
 
 while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
 
-print(msg)
+    data, addr = fwq.recvfrom(1024)
 
-conn.close()
+    recvmsg = data.decode('utf-8')
+
+    if recvmsg == 'exit!':
+        print("Другой участник добровольно закончил чат с тобой, пока!")
+        break
+
+    print('client msg: ' + recvmsg)
+    replymsg = input('Ответить:')
+
+    fwq.sendto(replymsg.encode('utf-8'), addr)
+
+fwq.close()
